@@ -2,6 +2,9 @@ import random
 from tkinter import *
 import time
 
+global TIME
+TIME = 300
+
 colors = ["Black"]
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -1095,10 +1098,10 @@ def Solve(graph, cheliks, purpose):
     global worker_animation_states
     worker_animation_states = {}
 
-    t = 5
-    max_time, routes = solve(graph, cheliks, purpose, t)
+    global TIME
+    min_time, routes = solve(graph, cheliks, purpose, TIME)
 
-    print(f"Максимальное время: {max_time}")
+    print(f"Минимальное время: {min_time}")
     for i, route in enumerate(routes):
         print(f"Рабочий {i + 1}: {' → '.join(str(p) for p in route)}")
         Animate(Get_all_path(route, graph), i)

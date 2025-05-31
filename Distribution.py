@@ -1097,7 +1097,7 @@ def Solve(graph, cheliks, purpose):
 
     print(f"Минимальное время: {min_time}")
     for i, route in enumerate(routes):
-        print(f"Рабочий {i + 1}: {' → '.join(str(p) for p in route)}")
+        print(f"Рабочий {i + 1}: {' → '.join("(" + str(p[1] + 1) + ", " + str(X - p[0]) + ")" for p in route)}")
         Animate(Get_all_path(route, graph), i)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------#

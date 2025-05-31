@@ -2,11 +2,32 @@ import random
 from tkinter import *
 import time
 
-global TIME
-TIME = 300
+"""
+Please, write in input files your cells and area coordinates (as in the example); choose your warehouse sizes (in global X, global Y) and time for processing one cell (global TIME).
 
-global KOEF
-KOEF = 20
+       Y ^          
+         |          
+         |          
+         |          
+         |          
+         |          
+         |          
+         |          
+         |
+        -+--------->
+         |         X
+
+Note that the lower-left corner has coordinates (1, 1).
+"""
+
+global TIME
+TIME = 300 # TIME FOR PROCESSING ONE CELL (TIME WOR MOVING = 1)
+
+global X
+X = 20 # YOUR FIELD SIZE
+
+global Y
+Y = 36 # YOUR FIELD SIZE
 
 colors = ["Black"]
 
@@ -99,23 +120,40 @@ tk.attributes('-fullscreen', True)
 screen_width = tk.winfo_screenwidth()
 screen_height = tk.winfo_screenheight()
 
+global KOEF
+l = X + 2
+r = 1000000000
+while (l + 1 != r):
+    m = (l + r) // 2
+    if (int(min(screen_width, screen_height) * 6 / 7) // m * m // m) * (Y + 2) < screen_width:
+        r = m
+    else:
+        l = m
+KOEF = l
+
 size = int(min(screen_width, screen_height) * 6 / 7) // KOEF * KOEF
 l = size // KOEF
 
 Gl = l
 Gs = size
 
-y1 = 0
+y1 = Gl
 x1 = Gl
+cnt1 = 0
 while (y1 + Gl < screen_height):
     y1 += Gl
-y1 -= Gl
+    cnt1 += 1
+    if (cnt1 == X):
+        break
 
 y2 = Gl
-x2 = 0
+x2 = Gl
+cnt2 = 0
 while (x2 + Gl < screen_width):
     x2 += Gl
-y2 += Gl
+    cnt2 += 1
+    if (cnt2 == Y):
+        break
 
 n = (y1 - y2) // Gl
 m = (x2 - x1) // Gl
@@ -187,7 +225,9 @@ read_area = read_number_pairs('input_area.txt')
 for p in read_area:
     h = p[0]
     w = p[1]
-    create_area(x1 + Gl * h, y1 - w * Gl)
+    if (h >= 1 and h <= Y):
+        if (w >= 1 and w <= X):
+            create_area(x1 + Gl * h, y1 - w * Gl)
 
 mas = []
 
@@ -207,7 +247,9 @@ read_cells = read_number_pairs('input_cells.txt')
 for p in read_cells:
     h = p[0]
     w = p[1]
-    create_cell(x1 + Gl * h, y1 - w * Gl)
+    if (h >= 1 and h <= Y):
+        if (w >= 1 and w <= X):
+            create_cell(x1 + Gl * h, y1 - w * Gl)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
 

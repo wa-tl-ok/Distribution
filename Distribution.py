@@ -5,6 +5,9 @@ import time
 global TIME
 TIME = 300
 
+global KOEF
+KOEF = 20
+
 colors = ["Black"]
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -96,8 +99,8 @@ tk.attributes('-fullscreen', True)
 screen_width = tk.winfo_screenwidth()
 screen_height = tk.winfo_screenheight()
 
-size = int(min(screen_width, screen_height) * 6 / 7) // 20 * 20
-l = size // 20
+size = int(min(screen_width, screen_height) * 6 / 7) // KOEF * KOEF
+l = size // KOEF
 
 Gl = l
 Gs = size
@@ -165,11 +168,6 @@ canvas.create_line(x1, y1, x2, y1, fill="black", width=5)
 canvas.create_line(x1, y2, x2, y2, fill="black", width=5)
 canvas.create_line(x1, y2, x1, y1, fill="black", width=5)
 canvas.create_line(x2, y1, x2, y2, fill="black", width=5)
-canvas.create_line(x2 - Gl * 9, y1 - Gl * 7, x2 - Gl * 9, y2, fill="black", width=5)
-canvas.create_line(x2 - Gl * 9, y1 - Gl * 7, x2 - 6 * Gl, y1 - Gl * 7, fill="black", width=5)
-canvas.create_line(x2 - Gl * 4, y1 - Gl * 7, x2, y1 - Gl * 7, fill="black", width=5)
-
-canvas.create_line(x2 - Gl * 4, y1 - Gl * 7, x2 - Gl * 6, y1 - Gl * 7, fill="deeppink", width=5)
 
 arr = []
 
@@ -184,11 +182,12 @@ def create_area(x, y):
 
     canvas.create_rectangle(x1, y1, x2, y2, fill="yellow", outline="yellow", stipple="gray25")
 
-for i in range(n + 1):
-    if (5 <= i and i <= 16):
-        for j in range(m + 1):
-            if (21 <= j and j <= 26):
-                create_area(x1 + Gl * j, y1 - i * Gl)
+read_area = read_number_pairs('input_area.txt')
+
+for p in read_area:
+    h = p[0]
+    w = p[1]
+    create_area(x1 + Gl * h, y1 - w * Gl)
 
 mas = []
 
@@ -203,41 +202,12 @@ def create_cell(x, y):
 
     canvas.create_rectangle(x1, y1, x2, y2, fill="brown", outline="orange")
 
-for i in range(n + 1):
-    if (i == 2 or i == 3 or i == 5 or i == 6 or i == 8 or i == 9 or i == 12 or i == 13 or i == 15 or i == 16 or i == 18 or i == 19):
-        for j in range(m + 1):
-            if (2 <= j and j <= 5 or 7 <= j and j <= 9 or 12 <= j and j <= 14 or 16 <= j and j <= 19):
-                create_cell(x1 + Gl * i, y1 - j * Gl)
+read_cells = read_number_pairs('input_cells.txt')
 
-for i in range(n + 1):
-    if (18 <= i and i <= 19):
-        for j in range(m + 1):
-            if (21 <= j and j <= 26):
-                create_cell(x1 + Gl * j, y1 - i * Gl)
-
-for i in range(n + 1):
-    if (2 <= i and i <= 3):
-        for j in range(m + 1):
-            if (28 <= j and j <= 32):
-                create_cell(x1 + Gl * j, y1 - i * Gl)
-
-for i in range(n + 1):
-    if (2 <= i and i <= 6):
-        for j in range(m + 1):
-            if (34 <= j and j <= 35):
-                create_cell(x1 + Gl * j, y1 - i * Gl)
-
-for i in range(n + 1):
-    if (9 <= i and i <= 11 or 13 <= i and i <= 15 or 17 <= i and i <= 19):
-        for j in range(m + 1):
-            if (29 <= j and j <= 30):
-                create_cell(x1 + Gl * j, y1 - i * Gl)
-
-for i in range(n + 1):
-    if (i == 9 or i == 10 or i == 12 or i == 13 or i == 15 or i == 16 or i == 18 or i == 19):
-        for j in range(m + 1):
-            if (33 <= j and j <= 35):
-                create_cell(x1 + Gl * j, y1 - i * Gl)
+for p in read_cells:
+    h = p[0]
+    w = p[1]
+    create_cell(x1 + Gl * h, y1 - w * Gl)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -473,7 +443,7 @@ for i in range (n + 1):
 for i in range (m + 1):
     reference_canvas.create_line(x1 + Gl * i, y1, x1 + Gl * i, y2, fill="red", width=2)
 
-def create_area(x, y):
+def create_area_reference_canvas(x, y):
     x1 = x - 2
     y1 = y + 1
     x2 = x - Gl + 1
@@ -481,11 +451,10 @@ def create_area(x, y):
 
     reference_canvas.create_rectangle(x1, y1, x2, y2, fill="yellow", outline="yellow", stipple="gray25")
 
-for i in range(n + 1):
-    if (5 <= i and i <= 16):
-        for j in range(m + 1):
-            if (21 <= j and j <= 26):
-                create_area(x1 + Gl * j, y1 - i * Gl)
+for i in range(len(arr)):
+    x = arr[i][0]
+    y = arr[i][1]
+    create_area_reference_canvas(x, y)
 
 def create_cell_reference_canvas(x, y):
     x1 = x - 2
@@ -504,11 +473,6 @@ reference_canvas.create_line(x1, y1, x2, y1, fill="black", width=5)
 reference_canvas.create_line(x1, y2, x2, y2, fill="black", width=5)
 reference_canvas.create_line(x1, y2, x1, y1, fill="black", width=5)
 reference_canvas.create_line(x2, y1, x2, y2, fill="black", width=5)
-reference_canvas.create_line(x2 - Gl * 9, y1 - Gl * 7, x2 - Gl * 9, y2, fill="black", width=5)
-reference_canvas.create_line(x2 - Gl * 9, y1 - Gl * 7, x2 - 6 * Gl, y1 - Gl * 7, fill="black", width=5)
-reference_canvas.create_line(x2 - Gl * 4, y1 - Gl * 7, x2, y1 - Gl * 7, fill="black", width=5)
-
-reference_canvas.create_line(x2 - Gl * 4, y1 - Gl * 7, x2 - Gl * 6, y1 - Gl * 7, fill="deeppink", width=5)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------#
 
@@ -695,25 +659,13 @@ def Transform(my_cells, my_workers):
                     graph[(i, j)].append((i, j + 1))
             else:
                 if i - 1 >= 0 and (Find(comf_mas, [i - 1, j]) == False or Find(comf_cells, [i - 1, j]) == True):
-                    if (i == 13 and (27 <= j and j <= 29 or 32 <= j and j <= 35)):
-                        pass
-                    else:
-                        graph[(i, j)].append((i - 1, j))
+                    graph[(i, j)].append((i - 1, j))
                 if j - 1 >= 0 and (Find(comf_mas, [i, j - 1]) == False or Find(comf_cells, [i, j - 1]) == True):
-                    if (j == 27 and 0 <= i and i <= 12):
-                        pass
-                    else:
-                        graph[(i, j)].append((i, j - 1))
+                    graph[(i, j)].append((i, j - 1))
                 if i + 1 < sn  and (Find(comf_mas, [i + 1, j]) == False or Find(comf_cells, [i + 1, j]) == True):
-                    if (i == 12 and (27 <= j and j <= 29 or 32 <= j and j <= 35)):
-                        pass
-                    else:
-                        graph[(i, j)].append((i + 1, j))
+                    graph[(i, j)].append((i + 1, j))
                 if j + 1 < sm and (Find(comf_mas, [i, j + 1]) == False or Find(comf_cells, [i, j + 1]) == True):
-                    if (j == 26 and 0 <= i and i <= 12):
-                        pass
-                    else:
-                        graph[(i, j)].append((i, j + 1))
+                    graph[(i, j)].append((i, j + 1))
 
     purpose = []
     for p in comf_cells:
